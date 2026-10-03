@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sample-1",
+    "country": "Japan",
+    "capital": "Tokyo",
+    "notes": "Visit Kyoto, eat ramen, and watch cherry blossoms."
+  },
+  {
+    "id": "sample-2",
+    "country": "France",
+    "capital": "Paris",
+    "notes": "See the Eiffel Tower and enjoy a café morning."
+  },
+  {
+    "id": "sample-3",
+    "country": "Italy",
+    "capital": "Rome",
+    "notes": "Try pizza, explore history, and walk the Colosseum area."
+  },
+  {
+    "id": "1791013919216",
+    "country": "Kenya",
+    "capital": "Nairobi",
+    "notes": "Save test for local file"
+  },
+  {
+    "id": "1791014232067",
+    "country": "Uganda",
+    "capital": "Kampala",
+    "notes": "Save verification from browser flow"
+  }
+]

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Destination</title>
+  <style>
+    :root {
+      --bg: #f5f7ff;
+      --card: #ffffff;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --shadow: 0 18px 40px rgba(79, 70, 229, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+      font-family: Arial, sans-serif;
+      color: var(--text);
+    }
+
+    .card {
+      width: min(92vw, 560px);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 18px;
+      color: var(--primary-dark);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .secondary {
+      background: #eef2ff;
+      color: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Edit destination</h1>
+
+    <form id="editForm">
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" id="country" placeholder="Country" required>
+      </div>
+
+      <div class="form-group">
+        <label for="capital">Capital</label>
+        <input type="text" id="capital" placeholder="Capital" required>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" placeholder="Notes"></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="primary" type="submit">Save changes</button>
+        <button class="secondary" type="button" onclick="location.href='index.html'">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!id) {
+        alert('No destination ID was provided.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const res = await fetch(`/api/travels/${id}`);
+
+      if (!res.ok) {
+        alert('Destination not found.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const item = await res.json();
+      document.getElementById('country').value = item.country;
+      document.getElementById('capital').value = item.capital;
+      document.getElementById('notes').value = item.notes || '';
+    });
+
+    document.getElementById('editForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const payload = {
+        country: document.getElementById('country').value,
+        capital: document.getElementById('capital').value,
+        notes: document.getElementById('notes').value
+      };
+
+      await fetch(`/api/travels/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
+
+

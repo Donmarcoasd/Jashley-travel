@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Bucket List</title>
+  <style>
+    :root {
+      --bg: #f5f7ff;
+      --card: #ffffff;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --accent: #14b8a6;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --danger: #ef4444;
+      --shadow: 0 18px 40px rgba(79, 70, 229, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 50px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
+      color: var(--primary-dark);
+    }
+
+    .header .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      font-size: 1rem;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .primary:hover { background: var(--primary-dark); }
+
+    .secondary {
+      background: #eef2ff;
+      color: var(--primary-dark);
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .danger:hover { background: #fecaca; }
+
+    .lookup-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .lookup-box input {
+      flex: 1 1 260px;
+    }
+
+    #lookupResult {
+      min-height: 24px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f8fafc;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+      color: var(--text);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      font-style: italic;
+    }
+
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Travel Bucket List</h1>
+      <div class="actions">
+        <button class="secondary" type="button" onclick="downloadBackup()">Save to local file</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>Add destination</h2>
+        <form id="addForm">
+          <div class="form-group">
+            <label for="country">Country</label>
+            <input id="country" name="country" type="text" placeholder="e.g. Thailand" required>
+          </div>
+
+          <div class="form-group">
+            <label for="capital">Capital</label>
+            <input id="capital" name="capital" type="text" placeholder="e.g. Bangkok" required>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" placeholder="What do you want to do there?"></textarea>
+          </div>
+
+          <button class="primary" type="submit">Add destination</button>
+          <div id="saveStatus" style="margin-top:12px; min-height:24px; color: var(--muted); font-size: 0.95rem;"></div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Travel notes</h2>
+        <p style="margin:0; color: var(--muted); line-height:1.7;">
+          Keep your bucket list in a local JSON file and export a backup anytime. This keeps the project simple, reliable, and suitable for a college assignment.
+        </p>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>My trips</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Capital</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="list"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.location.protocol === 'file:') {
+        setStatus('Open this app using http://localhost:3000 and start the server with npm start before saving.', true);
+      }
+      loadData();
+    });
+
+    function setStatus(message, isError = false) {
+      const status = document.getElementById('saveStatus');
+      if (!status) return;
+      status.textContent = message;
+      status.style.color = isError ? '#b91c1c' : '#0f766e';
+    }
+
+    function escapeHtml(value = '') {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    async function loadData() {
+      const res = await fetch('/api/travels');
+      const items = await res.json();
+      const list = document.getElementById('list');
+
+      if (!items.length) {
+        list.innerHTML = '<tr><td colspan="4" class="empty">No travel plans yet. Add your first destination.</td></tr>';
+        return;
+      }
+
+      list.innerHTML = items.map((item) => `
+        <tr>
+          <td>${escapeHtml(item.country)}</td>
+          <td>${escapeHtml(item.capital)}</td>
+          <td>${escapeHtml(item.notes || 'No notes yet')}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="secondary" type="button" onclick="location.href='edit.html?id=${item.id}'">Edit</button>
+              <button class="danger" type="button" onclick="deleteItem('${item.id}')">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('addForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (window.location.protocol === 'file:') {
+        setStatus('Open the app through http://localhost:3000 before saving.', true);
+        return;
+      }
+
+      const payload = {
+        country: document.getElementById('country').value,
+        capital: document.getElementById('capital').value,
+        notes: document.getElementById('notes').value
+      };
+
+      try {
+        const response = await fetch('/api/travels', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || 'Save failed');
+        }
+
+        document.getElementById('addForm').reset();
+        setStatus('Destination saved successfully.');
+        loadData();
+      } catch (error) {
+        console.error(error);
+        setStatus('The server is not running or the app is not opened correctly. Start it with npm start and open http://localhost:3000.', true);
+      }
+    });
+
+    async function deleteItem(id) {
+      if (!confirm('Delete this destination from your bucket list?')) {
+        return;
+      }
+
+      await fetch(`/api/travels/${id}`, { method: 'DELETE' });
+      loadData();
+    }
+
+    function downloadBackup() {
+      window.location.href = '/api/export';
+    }
+  </script>
+</body>
+</html>
+
